@@ -1,0 +1,89 @@
+<html>
+    <head>
+        <title>Tp4 - Vue </title>
+    </head>
+    <body>
+        <div id="app">
+            <section>
+                <h1>Registro de Personas: </h1>
+                <label for="Nombre">Nombre: </label>
+                <input type="text" v-model="persona.nombre" id="Nombre">
+                <label for="Edad">Edad: </label>
+                <input type="number" min="1" max="123" v-model="persona.edad" id="Edad">
+                <label for="Sexo">Sexo: </label>
+                <select v-model="persona.sexo" id="Sexo">
+                    <option disabled value="">Seleccione una opción</option>
+                    <option value="Masculino">Masculino</option>
+                    <option value="Femenino">Femenino</option>
+                    <option value="Otro">Otro</option>
+                </select> 
+                <button @click="agregar()">Agregar</button>
+                </section>
+                <section>
+                <h1>Hay {{total}} persona/s agregadas: </h1>
+                <article>
+                    <label for = "opcion_mostrar">Ver Personas agregadas segun sexo: </label>
+                    <select v-model="elegido" id="opcion_mostrar">
+                    <option disabled value="">Seleccione una opción</option>
+                    <option value="Masculino">Masculino</option>
+                    <option value="Femenino">Femenino</option>
+                    <option value="Otro">Otro</option>
+                </select> 
+                <ul>
+                      <lista-persona
+                     v-for="(persona, index) in seleccionados(personas)" :key="index"
+                     v-bind:persona="persona">
+                     </lista-persona>
+                </ul> 
+                </article>
+            </section>
+       </div>   
+        <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+        <script>
+
+            Vue.component('lista-persona', {
+            props: ['persona'],
+            template: `     <li>Nombre: {{ persona.nombre }} -- Edad :{{ persona.edad }} -- Sexo: {{ persona.sexo }}</li> ` 
+            })
+
+            new Vue({
+                el: "#app",
+                data: {
+                    idInicial: 0,
+                    elegido: "",
+                    personas: [],
+                    elegidos: [],
+                    persona: {
+                        nombre: "",
+                        edad: "",
+                        sexo: ""
+                    }
+                },
+                computed: {
+                    total() {
+                        return this.personas.length;
+                    },
+
+                },
+                methods: {
+                    agregar() {
+                        this.personas.push({
+                            id: this.idInicial++,
+                            nombre: this.persona.nombre,
+                            edad: this.persona.edad,
+                            sexo: this.persona.sexo
+                        });
+                        
+                        this.persona.nombre = "";
+                        this.persona.edad = "";
+                        this.persona.sexo = "";
+                    },
+
+                    seleccionados() {
+                        return this.elegidos = this.personas.filter(persona => persona.sexo === this.elegido);
+                    }
+                }
+            });
+        </script>
+    </body>
+</html>
